@@ -1,0 +1,152 @@
+Build a Mobile-First Web App: HopHopFood - Professional Donation Platform
+Create a comprehensive mobile web application for HopHopFood, a donation platform connecting food professionals with beneficiaries to fight food waste.
+Target Users: Professional food donors including restaurants, supermarkets, festivals, theatres, concerts, and wellness businesses (barbers, yoga studios, sports centers).
+Technical Requirements:
+
+Mobile-first responsive design
+Use shadcn/ui component library
+React with modern hooks (useState, useEffect)
+Clean, elegant UI with primary green color (#16a34a or similar)
+Smooth transitions and hover effects
+No external APIs needed - use local state management
+Include proper form validation and error handling
+
+App Structure - 5 Main Navigation Tabs:
+1. ACCUEIL (Home/Dashboard)
+
+Professional dashboard overview
+Key metrics cards: total products, active donations, items saved from waste
+Interactive QR code generator for the business (visual placeholder)
+Recent donation history timeline (last 5-7 entries)
+Quick stats: weekly/monthly impact summary
+Prominent "Ajouter un produit" (Add Product) floating action button
+Welcome message with business name and type
+
+2. PRODUITS (Products Database)
+
+Complete product inventory management
+Grid/list view toggle for products
+Each product card shows: name, category, current stock, unit price, expiry tracking
+Categories: Boulangerie, Plats, Légumes, Fruits, Boissons, Desserts, Autres
+Add new product form with fields:
+
+Product name and description
+Category selection
+Unit price (for tax benefit calculation)
+Current stock quantity
+Expiry date/shelf life
+Photo upload placeholder
+
+
+Edit/delete product actions
+Search and filter functionality
+Low stock alerts
+
+3. OFFRIR (Make Donation)
+
+Select product from personal database dropdown
+Donation form with:
+
+Product selection with stock validation
+Detailed donation description (what, condition, special notes)
+Tax benefit value calculator (automatic based on quantity × unit price)
+Quantity to donate (max = current stock)
+Maximum quantity per person/family
+Availability dates (start and end date pickers)
+Collection time slots (integrated with Horaire settings)
+Special collection instructions
+
+
+Preview donation before publishing
+Active donations management (edit, pause, end early)
+
+4. HORAIRE (Collection Schedule Management)
+
+Weekly schedule grid showing business hours
+Multi-slot collection system based on business type:
+Alimentaire (Food businesses):
+
+Lunch and dinner slots
+24/7 continuous opening option
+Multiple daily collection windows
+
+Culture (Theatres/Concerts):
+
+Pre-show collection (full day before performance)
+Multi-day advance collection
+Multiple daily slots for venues with several shows
+Performance schedule integration
+
+Bien-être (Wellness):
+
+Defined duration slots (1-hour blocks: 13h-14h, 14h-15h)
+Identical time slots for multiple service providers
+Appointment-based collection system
+
+
+Management actions:
+
+Update regular collection hours
+Set exceptional closures (single day)
+Schedule vacation/extended closure periods
+Emergency closure toggle
+
+
+Visual calendar view for closures and special schedules
+Automated conflict detection between donations and closures
+
+5. AUTRES (Settings & Profile)
+
+Business Profile Management:
+
+Logo/photo upload with preview
+Business name and type selection
+Detailed description
+Complete address with map integration placeholder
+Collection instructions (custom guidelines: "Bring containers", "Use side door", etc.)
+
+
+Account Management:
+
+Terms and Conditions (CGU) access
+Contact support with predefined categories
+Account deletion with confirmation process
+Secure logout functionality
+
+
+Additional Settings:
+
+Notification preferences
+Language selection
+Data export options
+Privacy settings
+
+
+
+Design Requirements:
+
+Color Scheme: Primary green (#16a34a), supporting earth tones, clean whites
+Typography: Clear, accessible fonts with proper hierarchy
+Mobile Navigation: Bottom tab bar with icons and labels
+Interactions: Smooth animations, loading states, success/error feedback
+Accessibility: High contrast ratios, proper ARIA labels, keyboard navigation
+Visual Elements: Subtle shadows, rounded corners, consistent spacing
+Environmental Theme: Leaf/recycle icons, growth metaphors, sustainability messaging
+
+Data Structure Considerations:
+
+Products with categories, stock tracking, pricing
+Donations with status tracking, collection slots, beneficiary limits
+Schedule management with business type-specific logic
+User profile with business verification details
+Transaction history for tax reporting
+
+User Experience Flow:
+
+Dashboard overview → Quick actions
+Product management → Stock tracking
+Donation creation → Beneficiary matching
+Schedule coordination → Collection optimization
+Profile maintenance → Account management
+
+Ensure the app feels native on mobile devices with proper touch targets, swipe gestures, and responsive layouts. Include loading states, empty states, and comprehensive error handling throughout the application.
