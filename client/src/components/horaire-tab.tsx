@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Plus, Trash } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,46 @@ export default function HoraireTab() {
   const [emergencyClosure, setEmergencyClosure] = useState(false);
   const [newClosureDate, setNewClosureDate] = useState("");
 
-  const { data: schedules = [] } = useSchedule();
+  const { data: schedules = [], createOrUpdateSchedule } = useSchedule();
+
+  // Update all schedules when business type changes
+  useEffect(() => {
+    const updateSchedulesForBusinessType = async () => {
+      for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
+        let defaultSlots: Array<{startTime: string, endTime: string, label: string}> = [];
+        
+        if (businessType === "alimentaire") {
+          // Midi et soir, ouverture continue 7/7
+          defaultSlots = [
+            { startTime: "12:00", endTime: "14:00", label: "Service midi" },
+            { startTime: "19:00", endTime: "21:00", label: "Service soir" }
+          ];
+        } else if (businessType === "culture") {
+          // Toute la journée avec réservation
+          defaultSlots = [
+            { startTime: "09:00", endTime: "22:00", label: "Représentations" }
+          ];
+        } else if (businessType === "bien-etre") {
+          // Créneaux horaires pour services
+          defaultSlots = [
+            { startTime: "13:00", endTime: "14:00", label: "Créneau 1" },
+            { startTime: "14:00", endTime: "15:00", label: "Créneau 2" },
+            { startTime: "15:00", endTime: "16:00", label: "Créneau 3" }
+          ];
+        }
+
+        createOrUpdateSchedule.mutate({
+          businessId: "demo-business-1",
+          dayOfWeek,
+          isOpen: dayOfWeek !== 0 || businessType === "alimentaire", // Alimentaire open 7/7
+          timeSlots: defaultSlots,
+          businessType
+        });
+      }
+    };
+
+    updateSchedulesForBusinessType();
+  }, [businessType, createOrUpdateSchedule]);
 
   const businessTypes = [
     { value: "alimentaire", label: "Alimentaire (Restaurant/Supermarché)" },

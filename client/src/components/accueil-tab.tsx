@@ -11,8 +11,10 @@ export default function AccueilTab() {
   const { data: donations = [] } = useDonations();
 
   const activeDonations = donations.filter(d => d.status === "active");
-  const totalSavedItems = 156; // This would be calculated from historical data
-  const taxValue = 342; // This would be calculated from total donations
+  const completedDonations = donations.filter(d => d.status === "completed");
+  const totalDonations = completedDonations.length;
+  const wasteReduced = completedDonations.reduce((total, donation) => total + donation.quantity, 0);
+  const peopleBenefited = Math.floor(wasteReduced * 1.5); // Estimate based on portions
 
   return (
     <div>
@@ -32,49 +34,49 @@ export default function AccueilTab() {
 
       {/* Key Metrics */}
       <div className="p-4 space-y-4">
-        <h3 className="text-lg font-semibold text-gray-900">Tableau de bord</h3>
+        <h3 className="text-lg font-semibold text-gray-900">Impact ce mois-ci</h3>
         <div className="grid grid-cols-2 gap-3">
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center space-x-2">
-                <Package className="w-5 h-5 text-primary-600" />
-                <span className="text-sm text-gray-600">Produits</span>
+                <Gift className="w-5 h-5 text-primary-600" />
+                <span className="text-sm text-gray-600">Dons</span>
               </div>
-              <p className="text-2xl font-bold text-gray-900 mt-2">{products.length}</p>
+              <p className="text-2xl font-bold text-gray-900 mt-2">{totalDonations}</p>
             </CardContent>
           </Card>
           
           <Card>
             <CardContent className="p-4">
               <div className="flex items-center space-x-2">
-                <Gift className="w-5 h-5 text-red-500" />
+                <svg className="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+                <span className="text-sm text-gray-600">Gaspillage évité</span>
+              </div>
+              <p className="text-2xl font-bold text-gray-900 mt-2">{wasteReduced}kg</p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center space-x-2">
+                <svg className="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20a3 3 0 01-3-3v-2a3 3 0 013-3 3 3 0 013 3v2a3 3 0 01-3 3zm8-10a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                <span className="text-sm text-gray-600">Personnes aidées</span>
+              </div>
+              <p className="text-2xl font-bold text-gray-900 mt-2">{peopleBenefited}</p>
+            </CardContent>
+          </Card>
+          
+          <Card>
+            <CardContent className="p-4">
+              <div className="flex items-center space-x-2">
+                <Package className="w-5 h-5 text-green-500" />
                 <span className="text-sm text-gray-600">Dons actifs</span>
               </div>
               <p className="text-2xl font-bold text-gray-900 mt-2">{activeDonations.length}</p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center space-x-2">
-                <svg className="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-                <span className="text-sm text-gray-600">Éléments sauvés</span>
-              </div>
-              <p className="text-2xl font-bold text-gray-900 mt-2">{totalSavedItems}</p>
-            </CardContent>
-          </Card>
-          
-          <Card>
-            <CardContent className="p-4">
-              <div className="flex items-center space-x-2">
-                <svg className="w-5 h-5 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                </svg>
-                <span className="text-sm text-gray-600">Valeur fiscale</span>
-              </div>
-              <p className="text-2xl font-bold text-gray-900 mt-2">{taxValue}€</p>
             </CardContent>
           </Card>
         </div>
@@ -84,14 +86,14 @@ export default function AccueilTab() {
       <div className="px-4 mb-4">
         <Card>
           <CardContent className="p-4">
-            <h4 className="font-semibold text-gray-900 mb-3">Code QR de votre établissement</h4>
+            <h4 className="font-semibold text-gray-900 mb-3">Code QR de vérification</h4>
             <div className="flex items-center space-x-4">
               <div className="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center">
                 <QrCode className="w-8 h-8 text-gray-400" />
               </div>
               <div className="flex-1">
                 <p className="text-sm text-gray-600 mb-2">
-                  Partagez ce code pour que les bénéficiaires trouvent votre établissement
+                  Scannez ce code pour vérifier et finaliser les dons avec les bénéficiaires
                 </p>
                 <Button variant="ghost" size="sm" className="text-primary-600 p-0">
                   Télécharger <Download className="w-4 h-4 ml-1" />
@@ -123,12 +125,12 @@ export default function AccueilTab() {
           <Card>
             <CardContent className="p-3">
               <div className="flex items-start space-x-3">
-                <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <Plus className="w-4 h-4 text-green-600" />
+                <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Gift className="w-4 h-4 text-primary-600" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900">Nouveau produit ajouté</p>
-                  <p className="text-xs text-gray-500">Salade bio • hier</p>
+                  <p className="text-sm font-medium text-gray-900">Salade bio donnée</p>
+                  <p className="text-xs text-gray-500">2 portions • hier</p>
                 </div>
               </div>
             </CardContent>
@@ -137,12 +139,12 @@ export default function AccueilTab() {
           <Card>
             <CardContent className="p-3">
               <div className="flex items-start space-x-3">
-                <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                  <Calendar className="w-4 h-4 text-blue-600" />
+                <div className="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
+                  <Gift className="w-4 h-4 text-primary-600" />
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900">Horaires mis à jour</p>
-                  <p className="text-xs text-gray-500">Collecte 14h-16h • il y a 2 jours</p>
+                  <p className="text-sm font-medium text-gray-900">Fruits invendus donnés</p>
+                  <p className="text-xs text-gray-500">5kg • il y a 3 jours</p>
                 </div>
               </div>
             </CardContent>
@@ -150,20 +152,20 @@ export default function AccueilTab() {
         </div>
       </div>
 
-      {/* Impact Summary */}
-      <div className="px-4 mb-6">
+      {/* Quick Actions */}
+      <div className="px-4 pb-6">
         <Card className="gradient-green border-primary-200">
           <CardContent className="p-4">
-            <h4 className="font-semibold text-gray-900 mb-2">Impact ce mois-ci</h4>
-            <div className="grid grid-cols-2 gap-4 text-center">
-              <div>
-                <p className="text-2xl font-bold text-primary-600">23</p>
-                <p className="text-xs text-gray-600">Dons réalisés</p>
-              </div>
-              <div>
-                <p className="text-2xl font-bold text-primary-600">47kg</p>
-                <p className="text-xs text-gray-600">Gaspillage évité</p>
-              </div>
+            <h4 className="font-semibold text-gray-900 mb-3">Actions rapides</h4>
+            <div className="grid grid-cols-2 gap-3">
+              <Button variant="outline" className="h-auto p-3 flex-col space-y-1">
+                <Plus className="w-5 h-5 text-primary-600" />
+                <span className="text-xs">Nouveau don</span>
+              </Button>
+              <Button variant="outline" className="h-auto p-3 flex-col space-y-1">
+                <Package className="w-5 h-5 text-primary-600" />
+                <span className="text-xs">Ajouter produit</span>
+              </Button>
             </div>
           </CardContent>
         </Card>
