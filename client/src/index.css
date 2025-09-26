@@ -52,17 +52,17 @@
   --tracking-normal: 0em;
   --spacing: 0.25rem;
   
-  /* Custom green variations matching design */
+  /* Custom green variations matching design with improved contrast */
   --primary-50: hsl(138.5 76.5% 96.7%);
-  --primary-100: hsl(140.6 84.2% 92.5%);
-  --primary-200: hsl(141.5 78.9% 85.1%);
-  --primary-300: hsl(141.9 76.6% 73.1%);
-  --primary-400: hsl(141.9 69.2% 58.0%);
-  --primary-500: hsl(142.1 70.6% 45.3%);
-  --primary-600: hsl(142.1 76.2% 36.3%);
-  --primary-700: hsl(142.1 72.2% 29.0%);
-  --primary-800: hsl(142.8 64.2% 24.1%);
-  --primary-900: hsl(143.8 61.2% 20.2%);
+  --primary-100: hsl(140.6 84.2% 88.5%); /* Darker for better contrast */
+  --primary-200: hsl(141.5 78.9% 82.1%); /* Darker for better contrast */
+  --primary-300: hsl(141.9 76.6% 68.1%); /* Darker for better contrast */
+  --primary-400: hsl(141.9 69.2% 54.0%); /* Darker for better contrast */
+  --primary-500: hsl(142.1 70.6% 42.3%); /* Darker for better contrast */
+  --primary-600: hsl(142.1 76.2% 32.3%); /* Darker for better contrast */
+  --primary-700: hsl(142.1 72.2% 25.0%); /* Darker for better contrast */
+  --primary-800: hsl(142.8 64.2% 20.1%); /* Darker for better contrast */
+  --primary-900: hsl(143.8 61.2% 16.2%); /* Much darker for better contrast */
 }
 
 .dark {

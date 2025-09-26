@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Grid, List, Search, Edit, Clock, AlertTriangle, Plus } from "lucide-react";
+import { Grid, List, Search, Edit, Clock, AlertTriangle, Plus, Package } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -69,25 +69,43 @@ export default function ProduitsTab() {
 
   return (
     <div>
-      {/* Header with View Toggle */}
+      {/* Header with Add Product Button */}
       <div className="p-4 bg-white border-b border-gray-200">
         <div className="flex items-center justify-between mb-4">
           <h2 className="text-xl font-semibold text-gray-900">Mes produits</h2>
-          <div className="flex space-x-2">
-            <Button
-              variant={viewMode === "grid" ? "default" : "ghost"}
-              size="icon"
-              onClick={() => setViewMode("grid")}
-            >
-              <Grid className="w-4 h-4" />
-            </Button>
-            <Button
-              variant={viewMode === "list" ? "default" : "ghost"}
-              size="icon"
-              onClick={() => setViewMode("list")}
-            >
-              <List className="w-4 h-4" />
-            </Button>
+          <Button 
+            onClick={() => setIsAddModalOpen(true)}
+            className="flex items-center space-x-2 bg-primary-600 hover:bg-primary-700 shadow-sm"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Nouveau</span>
+          </Button>
+        </div>
+        
+        {/* View Toggle and Stats */}
+        <div className="flex items-center justify-between mb-4">
+          <div className="flex items-center space-x-4">
+            <span className="text-sm text-gray-600">
+              {filteredProducts.length} produit{filteredProducts.length !== 1 ? 's' : ''}
+            </span>
+            <div className="flex space-x-2">
+              <Button
+                variant={viewMode === "grid" ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setViewMode("grid")}
+                className="h-8"
+              >
+                <Grid className="w-3 h-3" />
+              </Button>
+              <Button
+                variant={viewMode === "list" ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setViewMode("list")}
+                className="h-8"
+              >
+                <List className="w-3 h-3" />
+              </Button>
+            </div>
           </div>
         </div>
         
@@ -121,11 +139,9 @@ export default function ProduitsTab() {
       <div className="p-4">
         {filteredProducts.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500 mb-4">Aucun produit trouvé</p>
-            <Button onClick={() => setIsAddModalOpen(true)}>
-              <Plus className="w-4 h-4 mr-2" />
-              Ajouter un produit
-            </Button>
+            <Package className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <p className="text-gray-600 font-medium mb-2">Aucun produit trouvé</p>
+            <p className="text-gray-500 text-sm">Utilisez le bouton "Nouveau" ci-dessus pour ajouter votre premier produit</p>
           </div>
         ) : (
           <div className={viewMode === "grid" ? "grid grid-cols-2 gap-3" : "grid grid-cols-1 gap-3"}>
@@ -211,16 +227,6 @@ export default function ProduitsTab() {
         )}
       </div>
 
-      {/* Add Product Button */}
-      <div className="p-4">
-        <Button 
-          className="w-full"
-          onClick={() => setIsAddModalOpen(true)}
-        >
-          <Plus className="w-4 h-4 mr-2" />
-          Ajouter un produit
-        </Button>
-      </div>
 
       {/* Add Product Modal */}
       <AddProductModal 
