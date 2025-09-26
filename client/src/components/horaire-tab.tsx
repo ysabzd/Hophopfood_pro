@@ -159,15 +159,25 @@ export default function HoraireTab() {
 
   const toggleDayOpen = async (dayOfWeek: number) => {
     const schedule = getScheduleForDay(dayOfWeek);
-    if (!schedule) return;
+    if (!schedule) {
+      console.log('No schedule found for day:', dayOfWeek);
+      return;
+    }
 
-    await createOrUpdateSchedule.mutateAsync({
-      businessId: "demo-business-1",
-      dayOfWeek,
-      isOpen: !schedule.isOpen,
-      timeSlots: schedule.timeSlots,
-      businessType
-    });
+    console.log('Toggling day:', dayOfWeek, 'from', schedule.isOpen, 'to', !schedule.isOpen);
+
+    try {
+      await createOrUpdateSchedule.mutateAsync({
+        businessId: "demo-business-1",
+        dayOfWeek,
+        isOpen: !schedule.isOpen,
+        timeSlots: schedule.timeSlots,
+        businessType
+      });
+      console.log('Toggle successful for day:', dayOfWeek);
+    } catch (error) {
+      console.error('Error toggling day:', dayOfWeek, error);
+    }
   };
 
   const addTimeSlot = async (dayOfWeek: number) => {
@@ -315,7 +325,10 @@ export default function HoraireTab() {
                   <div className="flex items-center space-x-2">
                     <Switch
                       checked={isOpen}
-                      onCheckedChange={() => toggleDayOpen(day.id)}
+                      onCheckedChange={(checked) => {
+                        console.log('Switch toggled for day:', day.id, 'to:', checked);
+                        toggleDayOpen(day.id);
+                      }}
                       className="data-[state=checked]:bg-green-600"
                     />
                     {isOpen && (
@@ -351,8 +364,9 @@ export default function HoraireTab() {
                               <div className="flex items-center space-x-2">
                                 <Switch
                                   checked={true}
+                                  onCheckedChange={() => {}}
                                   className="data-[state=checked]:bg-green-600 scale-75"
-                                  readOnly
+                                  disabled
                                 />
                                 <Badge variant="secondary" className="bg-green-100 text-green-700 text-xs">
                                   Actif

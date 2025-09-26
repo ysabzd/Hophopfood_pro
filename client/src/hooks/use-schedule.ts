@@ -11,11 +11,20 @@ export function useSchedule() {
 
   const createOrUpdateSchedule = useMutation({
     mutationFn: async (data: InsertSchedule) => {
+      console.log('Sending schedule update:', data);
       const response = await apiRequest("POST", "/api/schedule", data);
-      return response.json();
+      const result = await response.json();
+      console.log('Schedule update response:', result);
+      return result;
     },
-    onSuccess: () => {
+    onSuccess: (data) => {
+      console.log('Schedule update successful, invalidating cache');
       queryClient.invalidateQueries({ queryKey: ["/api/schedule"] });
+      // Force refetch
+      queryClient.refetchQueries({ queryKey: ["/api/schedule"] });
+    },
+    onError: (error) => {
+      console.error('Schedule update error:', error);
     },
   });
 
