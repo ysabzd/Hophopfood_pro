@@ -59,7 +59,7 @@ export class MemStorage implements IStorage {
     };
     this.businesses.set(demoBusiness.id, demoBusiness);
 
-    // Initialize with sample products
+    // Initialize with sample products (stock removed - quantities defined in donations only)
     const sampleProducts: Product[] = [
       {
         id: "product-1",
@@ -68,44 +68,44 @@ export class MemStorage implements IStorage {
         description: "Pain bio au levain naturel, cuit au feu de bois",
         category: "Boulangerie",
         unitPrice: "4.50",
-        currentStock: 8,
-        expiryDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days from now
+        currentStock: 0,
+        expiryDate: null,
         photoUrl: null,
         createdAt: new Date(),
       },
       {
-        id: "product-2", 
+        id: "product-2",
         businessId: "demo-business-1",
         name: "Salade César bio",
-        description: "Salade fraîche avec parmesan, croûtons maison",
+        description: "Salade fraîche avec parmesan, croûtons maison et vinaigrette balsamique",
         category: "Plats",
         unitPrice: "12.80",
-        currentStock: 5,
-        expiryDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000), // 1 day from now
+        currentStock: 0,
+        expiryDate: null,
         photoUrl: null,
         createdAt: new Date(),
       },
       {
         id: "product-3",
-        businessId: "demo-business-1", 
+        businessId: "demo-business-1",
         name: "Tomates cerises bio",
-        description: "Tomates cerises de producteurs locaux",
+        description: "Tomates cerises sucrées de producteurs locaux, parfaites en salade",
         category: "Légumes",
         unitPrice: "6.20",
-        currentStock: 15,
-        expiryDate: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
+        currentStock: 0,
+        expiryDate: null,
         photoUrl: null,
         createdAt: new Date(),
       },
       {
         id: "product-4",
         businessId: "demo-business-1",
-        name: "Tarte aux pommes",
-        description: "Tarte artisanale aux pommes du verger",
+        name: "Tarte aux pommes maison",
+        description: "Tarte artisanale aux pommes françaises avec pâte feuilletée maison",
         category: "Desserts",
         unitPrice: "18.00",
-        currentStock: 3,
-        expiryDate: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000), // 1 day from now  
+        currentStock: 0,
+        expiryDate: null,
         photoUrl: null,
         createdAt: new Date(),
       },
@@ -113,11 +113,11 @@ export class MemStorage implements IStorage {
         id: "product-5",
         businessId: "demo-business-1",
         name: "Jus de pomme fermier",
-        description: "Jus de pomme 100% naturel, sans conservateur",
+        description: "Jus de pomme 100% naturel du verger voisin, sans conservateur ni sucre ajouté",
         category: "Boissons",
         unitPrice: "3.80",
-        currentStock: 12,
-        expiryDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // 1 week from now
+        currentStock: 0,
+        expiryDate: null,
         photoUrl: null,
         createdAt: new Date(),
       },
@@ -125,11 +125,35 @@ export class MemStorage implements IStorage {
         id: "product-6",
         businessId: "demo-business-1",
         name: "Bananes bio équitables",
-        description: "Bananes issues du commerce équitable",
-        category: "Fruits", 
+        description: "Bananes mûres issues du commerce équitable, idéales pour smoothies",
+        category: "Fruits",
         unitPrice: "2.90",
-        currentStock: 2, // Low stock
-        expiryDate: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000), // 2 days from now
+        currentStock: 0,
+        expiryDate: null,
+        photoUrl: null,
+        createdAt: new Date(),
+      },
+      {
+        id: "product-7",
+        businessId: "demo-business-1",
+        name: "Quiche lorraine traditionnelle",
+        description: "Quiche aux lardons et fromage, pâte brisée maison",
+        category: "Plats",
+        unitPrice: "15.50",
+        currentStock: 0,
+        expiryDate: null,
+        photoUrl: null,
+        createdAt: new Date(),
+      },
+      {
+        id: "product-8",
+        businessId: "demo-business-1",
+        name: "Soupe de légumes du potager",
+        description: "Soupe maison aux légumes de saison, mijotée doucement",
+        category: "Plats",
+        unitPrice: "8.90",
+        currentStock: 0,
+        expiryDate: null,
         photoUrl: null,
         createdAt: new Date(),
       }
@@ -139,68 +163,168 @@ export class MemStorage implements IStorage {
       this.products.set(product.id, product);
     });
 
-    // Initialize with sample donations
+    // Initialize with sample donations (with new fiscal value system)
     const sampleDonations: Donation[] = [
       {
         id: "donation-1",
         businessId: "demo-business-1",
         productId: "product-1",
-        quantity: 3,
-        maxPerPerson: 1,
-        description: "Pain de la veille, encore excellent pour le petit déjeuner",
+        quantity: 5,
+        maxPerPerson: 2,
+        description: null,
         status: "active",
         availableFrom: new Date(),
         availableTo: new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
-        collectionSlots: ["lunch", "dinner"],
-        taxBenefitValue: "8.10",
-        createdAt: new Date(),
+        collectionSlots: [],
+        taxBenefitValue: "22.50", // 4.50 × 5
+        createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
       },
       {
-        id: "donation-2", 
+        id: "donation-2",
         businessId: "demo-business-1",
         productId: "product-2",
-        quantity: 2,
+        quantity: 3,
         maxPerPerson: 1,
-        description: "Salades préparées ce matin, à consommer rapidement",
-        status: "active", 
+        description: "À consommer aujourd'hui de préférence",
+        status: "active",
         availableFrom: new Date(),
-        availableTo: new Date(Date.now() + 1 * 24 * 60 * 60 * 1000),
-        collectionSlots: ["lunch"],
-        taxBenefitValue: "15.36",
-        createdAt: new Date(),
+        availableTo: new Date(Date.now() + 8 * 60 * 60 * 1000), // 8 hours from now
+        collectionSlots: [],
+        taxBenefitValue: "38.40", // 12.80 × 3
+        createdAt: new Date(Date.now() - 30 * 60 * 1000), // 30 min ago
       },
       {
         id: "donation-3",
-        businessId: "demo-business-1", 
-        productId: "product-4",
-        quantity: 1,
+        businessId: "demo-business-1",
+        productId: "product-7",
+        quantity: 2,
         maxPerPerson: 1,
-        description: "Tarte d'hier, parfaite pour le goûter",
-        status: "completed",
-        availableFrom: new Date(Date.now() - 24 * 60 * 60 * 1000), // Yesterday
-        availableTo: new Date(Date.now() - 2 * 60 * 60 * 1000), // 2 hours ago
-        collectionSlots: ["afternoon"],
-        taxBenefitValue: "10.80",
-        createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000),
+        description: "Quiches de midi, encore chaudes !",
+        status: "active",
+        availableFrom: new Date(),
+        availableTo: new Date(Date.now() + 6 * 60 * 60 * 1000), // 6 hours from now
+        collectionSlots: [],
+        taxBenefitValue: "31.00", // 15.50 × 2
+        createdAt: new Date(Date.now() - 45 * 60 * 1000), // 45 min ago
       },
       {
         id: "donation-4",
         businessId: "demo-business-1",
-        productId: "product-6", 
-        quantity: 1,
+        productId: "product-5",
+        quantity: 4,
         maxPerPerson: 2,
-        description: "Bananes très mûres, parfaites pour smoothies",
-        status: "completed",
-        availableFrom: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000), // 2 days ago
-        availableTo: new Date(Date.now() - 24 * 60 * 60 * 1000), // Yesterday
-        collectionSlots: ["morning"],
-        taxBenefitValue: "1.74",
-        createdAt: new Date(Date.now() - 2 * 24 * 60 * 60 * 1000),
+        description: "Jus frais du matin, excellent pour la santé",
+        status: "active",
+        availableFrom: new Date(),
+        availableTo: new Date(Date.now() + 3 * 24 * 60 * 60 * 1000), // 3 days from now
+        collectionSlots: [],
+        taxBenefitValue: "15.20", // 3.80 × 4
+        createdAt: new Date(Date.now() - 4 * 60 * 60 * 1000), // 4 hours ago
+      },
+      {
+        id: "donation-5",
+        businessId: "demo-business-1",
+        productId: "product-8",
+        quantity: 6,
+        maxPerPerson: 2,
+        description: "Soupe de légumes maison, parfaite pour l'hiver",
+        status: "active",
+        availableFrom: new Date(),
+        availableTo: new Date(Date.now() + 12 * 60 * 60 * 1000), // 12 hours from now
+        collectionSlots: [],
+        taxBenefitValue: "53.40", // 8.90 × 6
+        createdAt: new Date(Date.now() - 1 * 60 * 60 * 1000), // 1 hour ago
       }
     ];
     
     sampleDonations.forEach(donation => {
       this.donations.set(donation.id, donation);
+    });
+
+    // Initialize with sample schedules
+    const sampleSchedules: Schedule[] = [
+      // Lundi - Restaurant avec 2 services
+      {
+        id: "schedule-1",
+        businessId: "demo-business-1",
+        dayOfWeek: 1,
+        isOpen: true,
+        timeSlots: [
+          { startTime: "11:30", endTime: "14:30", label: "Matin", type: "morning" },
+          { startTime: "18:30", endTime: "22:00", label: "Soir", type: "evening" }
+        ],
+        businessType: "restaurant"
+      },
+      // Mardi - Restaurant avec 2 services
+      {
+        id: "schedule-2",
+        businessId: "demo-business-1",
+        dayOfWeek: 2,
+        isOpen: true,
+        timeSlots: [
+          { startTime: "11:30", endTime: "14:30", label: "Matin", type: "morning" },
+          { startTime: "18:30", endTime: "22:00", label: "Soir", type: "evening" }
+        ],
+        businessType: "restaurant"
+      },
+      // Mercredi - Restaurant avec 2 services
+      {
+        id: "schedule-3",
+        businessId: "demo-business-1",
+        dayOfWeek: 3,
+        isOpen: true,
+        timeSlots: [
+          { startTime: "11:30", endTime: "14:30", label: "Matin", type: "morning" },
+          { startTime: "18:30", endTime: "22:00", label: "Soir", type: "evening" }
+        ],
+        businessType: "restaurant"
+      },
+      // Jeudi - Restaurant avec 2 services
+      {
+        id: "schedule-4",
+        businessId: "demo-business-1",
+        dayOfWeek: 4,
+        isOpen: true,
+        timeSlots: [
+          { startTime: "11:30", endTime: "14:30", label: "Matin", type: "morning" },
+          { startTime: "18:30", endTime: "22:00", label: "Soir", type: "evening" }
+        ],
+        businessType: "restaurant"
+      },
+      // Vendredi - Restaurant avec 2 services (horaires étendus)
+      {
+        id: "schedule-5",
+        businessId: "demo-business-1",
+        dayOfWeek: 5,
+        isOpen: true,
+        timeSlots: [
+          { startTime: "11:30", endTime: "14:30", label: "Matin", type: "morning" },
+          { startTime: "18:00", endTime: "23:00", label: "Soir", type: "evening" }
+        ],
+        businessType: "restaurant"
+      },
+      // Samedi - Fermé
+      {
+        id: "schedule-6",
+        businessId: "demo-business-1",
+        dayOfWeek: 6,
+        isOpen: false,
+        timeSlots: [],
+        businessType: "restaurant"
+      },
+      // Dimanche - Fermé
+      {
+        id: "schedule-0",
+        businessId: "demo-business-1",
+        dayOfWeek: 0,
+        isOpen: false,
+        timeSlots: [],
+        businessType: "restaurant"
+      }
+    ];
+
+    sampleSchedules.forEach(schedule => {
+      this.schedules.set(schedule.id, schedule);
     });
   }
 
@@ -338,7 +462,7 @@ export class MemStorage implements IStorage {
         businessId: insertSchedule.businessId,
         dayOfWeek: insertSchedule.dayOfWeek,
         isOpen: insertSchedule.isOpen ?? existing.isOpen,
-        timeSlots: Array.from(insertSchedule.timeSlots ?? existing.timeSlots) as {startTime: string, endTime: string, label: string}[],
+        timeSlots: Array.from(insertSchedule.timeSlots ?? existing.timeSlots) as {startTime: string, endTime: string, label: string, type?: string}[],
         businessType: insertSchedule.businessType,
       };
       this.schedules.set(existing.id, updated);
@@ -349,8 +473,8 @@ export class MemStorage implements IStorage {
         id,
         businessId: insertSchedule.businessId,
         dayOfWeek: insertSchedule.dayOfWeek,
-        isOpen: insertSchedule.isOpen ?? true,
-        timeSlots: Array.from(insertSchedule.timeSlots ?? []) as {startTime: string, endTime: string, label: string}[],
+        isOpen: insertSchedule.isOpen ?? false,
+        timeSlots: Array.from(insertSchedule.timeSlots ?? []) as {startTime: string, endTime: string, label: string, type?: string}[],
         businessType: insertSchedule.businessType,
       };
       this.schedules.set(id, schedule);
