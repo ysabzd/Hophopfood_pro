@@ -1,0 +1,30 @@
+[build]
+  # Build command pour construire le client React
+  command = "npm run build"
+
+  # Dossier à publier (où Vite met les fichiers buildés)
+  publish = "dist/public"
+
+[build.environment]
+  # Variables d'environnement pour le build
+  NODE_VERSION = "18"
+
+# Configuration pour SPA (Single Page Application)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Headers de sécurité et performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Cache-Control = "public, max-age=31536000"
+
+[[headers]]
+  for = "*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
