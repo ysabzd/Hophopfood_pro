@@ -1,0 +1,1069 @@
+<html lang="fr" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HopHopFood - Plateforme de Don Professionnelle</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: {
+                            50: '#f0fdf4',
+                            100: '#dcfce7',
+                            200: '#bbf7d0',
+                            300: '#86efac',
+                            400: '#4ade80',
+                            500: '#22c55e',
+                            600: '#16a34a',
+                            700: '#15803d',
+                            800: '#166534',
+                            900: '#14532d',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                    }
+                }
+            }
+        };
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="h-full bg-gray-50 font-sans">
+    <!-- @COMPONENT: MobileApp -->
+    <div class="min-h-screen pb-20 max-w-md mx-auto bg-white shadow-xl">
+        
+        <!-- @COMPONENT: TopHeader -->
+        <header class="bg-primary-600 text-white p-4 sticky top-0 z-50">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <div class="w-8 h-8 bg-white rounded-full flex items-center justify-center">
+                        <i class="fas fa-leaf text-primary-600 text-sm"></i>
+                    </div>
+                    <h1 class="text-lg font-semibold">HopHopFood</h1>
+                </div>
+                <button class="p-2 rounded-full hover:bg-primary-700 transition-colors">
+                    <i class="fas fa-bell text-white"></i>
+                </button>
+            </div>
+        </header>
+        <!-- @END_COMPONENT: TopHeader -->
+
+        <!-- @COMPONENT: MainContent -->
+        <main class="flex-1 overflow-y-auto">
+            
+            <!-- Tab Content Container -->
+            <div id="tab-content">
+                
+                <!-- @COMPONENT: AccueilTab -->
+                <div id="accueil-tab" class="tab-content active">
+                    <!-- Welcome Section -->
+                    <div class="bg-gradient-to-r from-primary-500 to-primary-600 text-white p-6">
+                        <h2 class="text-xl font-semibold mb-2" data-bind="business.name">Restaurant Le Jardin Bio</h2>
+                        <p class="text-primary-100" data-bind="business.type">Restaurant - Cuisine biologique</p>
+                        <div class="mt-4 flex items-center space-x-2">
+                            <div class="w-3 h-3 bg-green-400 rounded-full"></div>
+                            <span class="text-sm">Actif - Collectes disponibles</span>
+                        </div>
+                    </div>
+
+                    <!-- Key Metrics -->
+                    <div class="p-4 space-y-4">
+                        <h3 class="text-lg font-semibold text-gray-900">Tableau de bord</h3>
+                        <div class="grid grid-cols-2 gap-3">
+                            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-box text-primary-600"></i>
+                                    <span class="text-sm text-gray-600">Produits</span>
+                                </div>
+                                <p class="text-2xl font-bold text-gray-900 mt-2" data-bind="metrics.totalProducts">24</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-heart text-red-500"></i>
+                                    <span class="text-sm text-gray-600">Dons actifs</span>
+                                </div>
+                                <p class="text-2xl font-bold text-gray-900 mt-2" data-bind="metrics.activeDonations">7</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-recycle text-primary-600"></i>
+                                    <span class="text-sm text-gray-600">Éléments sauvés</span>
+                                </div>
+                                <p class="text-2xl font-bold text-gray-900 mt-2" data-bind="metrics.savedItems">156</p>
+                            </div>
+                            <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                                <div class="flex items-center space-x-2">
+                                    <i class="fas fa-euro-sign text-primary-600"></i>
+                                    <span class="text-sm text-gray-600">Valeur fiscale</span>
+                                </div>
+                                <p class="text-2xl font-bold text-gray-900 mt-2" data-bind="metrics.taxValue">342€</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- QR Code Section -->
+                    <div class="px-4 mb-4">
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                            <h4 class="font-semibold text-gray-900 mb-3">Code QR de votre établissement</h4>
+                            <div class="flex items-center space-x-4">
+                                <div class="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center">
+                                    <!-- @FUNCTIONALITY: QR code generator showing business profile -->
+                                    <i class="fas fa-qrcode text-3xl text-gray-400"></i>
+                                </div>
+                                <div class="flex-1">
+                                    <p class="text-sm text-gray-600 mb-2">Partagez ce code pour que les bénéficiaires trouvent votre établissement</p>
+                                    <button class="text-primary-600 text-sm font-medium">Télécharger <i class="fas fa-download ml-1"></i></button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Recent Activity Timeline -->
+                    <div class="px-4 mb-6">
+                        <h4 class="font-semibold text-gray-900 mb-3">Activité récente</h4>
+                        <div class="space-y-3">
+                            <!-- @MAP: recentActivity.map(activity => ( -->
+                            <div class="flex items-start space-x-3 bg-white p-3 rounded-lg shadow-sm border border-gray-200" data-mock="true">
+                                <div class="w-8 h-8 bg-primary-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-gift text-primary-600 text-xs"></i>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium text-gray-900">Pain artisanal donné</p>
+                                    <p class="text-xs text-gray-500">3 baguettes • il y a 2 heures</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3 bg-white p-3 rounded-lg shadow-sm border border-gray-200" data-mock="true">
+                                <div class="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-plus text-green-600 text-xs"></i>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium text-gray-900">Nouveau produit ajouté</p>
+                                    <p class="text-xs text-gray-500">Salade bio • hier</p>
+                                </div>
+                            </div>
+                            <div class="flex items-start space-x-3 bg-white p-3 rounded-lg shadow-sm border border-gray-200" data-mock="true">
+                                <div class="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                                    <i class="fas fa-calendar text-blue-600 text-xs"></i>
+                                </div>
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-medium text-gray-900">Horaires mis à jour</p>
+                                    <p class="text-xs text-gray-500">Collecte 14h-16h • il y a 2 jours</p>
+                                </div>
+                            </div>
+                            <!-- @END_MAP )) -->
+                        </div>
+                    </div>
+
+                    <!-- Impact Summary -->
+                    <div class="px-4 mb-6">
+                        <div class="bg-gradient-to-r from-primary-50 to-green-50 p-4 rounded-lg border border-primary-200">
+                            <h4 class="font-semibold text-gray-900 mb-2">Impact ce mois-ci</h4>
+                            <div class="grid grid-cols-2 gap-4 text-center">
+                                <div>
+                                    <p class="text-2xl font-bold text-primary-600" data-bind="impact.monthlyDonations">23</p>
+                                    <p class="text-xs text-gray-600">Dons réalisés</p>
+                                </div>
+                                <div>
+                                    <p class="text-2xl font-bold text-primary-600" data-bind="impact.monthlyKgSaved">47kg</p>
+                                    <p class="text-xs text-gray-600">Gaspillage évité</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: AccueilTab -->
+
+                <!-- @COMPONENT: ProduitsTab -->
+                <div id="produits-tab" class="tab-content hidden">
+                    <!-- Header with View Toggle -->
+                    <div class="p-4 bg-white border-b border-gray-200">
+                        <div class="flex items-center justify-between mb-4">
+                            <h2 class="text-xl font-semibold text-gray-900">Mes produits</h2>
+                            <div class="flex space-x-2">
+                                <button id="grid-view-btn" class="p-2 rounded-lg bg-primary-100 text-primary-600">
+                                    <i class="fas fa-th-large"></i>
+                                </button>
+                                <button id="list-view-btn" class="p-2 rounded-lg text-gray-400">
+                                    <i class="fas fa-list"></i>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <!-- Search and Filter -->
+                        <div class="space-y-3">
+                            <div class="relative">
+                                <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
+                                <input type="text" placeholder="Rechercher un produit..." 
+                                       class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent">
+                            </div>
+                            <select class="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                                <option>Toutes les catégories</option>
+                                <option>Boulangerie</option>
+                                <option>Plats</option>
+                                <option>Légumes</option>
+                                <option>Fruits</option>
+                                <option>Boissons</option>
+                                <option>Desserts</option>
+                                <option>Autres</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Products Grid -->
+                    <div class="p-4">
+                        <div id="products-grid" class="grid grid-cols-2 gap-3">
+                            <!-- @MAP: products.map(product => ( -->
+                            <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden" data-mock="true">
+                                <div class="aspect-w-1 aspect-h-1 bg-gray-100 relative">
+                                    <!-- Product placeholder image -->
+                                    <div class="w-full h-32 bg-gradient-to-br from-primary-100 to-primary-200 flex items-center justify-center">
+                                        <i class="fas fa-bread-slice text-primary-600 text-2xl"></i>
+                                    </div>
+                                    <div class="absolute top-2 right-2">
+                                        <span class="bg-primary-600 text-white text-xs px-2 py-1 rounded-full">Stock: 12</span>
+                                    </div>
+                                </div>
+                                <div class="p-3">
+                                    <h3 class="font-medium text-gray-900 text-sm mb-1" data-bind="product.name">Pain de campagne</h3>
+                                    <p class="text-xs text-gray-500 mb-2" data-bind="product.category">Boulangerie</p>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-sm font-semibold text-gray-900" data-bind="product.price">3.50€</span>
+                                        <button class="text-primary-600 text-xs">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </div>
+                                    <div class="mt-2 text-xs text-gray-500">
+                                        <i class="fas fa-clock mr-1"></i>
+                                        <span data-bind="product.expiry">Expire dans 2j</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden" data-mock="true">
+                                <div class="aspect-w-1 aspect-h-1 bg-gray-100 relative">
+                                    <div class="w-full h-32 bg-gradient-to-br from-green-100 to-green-200 flex items-center justify-center">
+                                        <i class="fas fa-carrot text-green-600 text-2xl"></i>
+                                    </div>
+                                    <div class="absolute top-2 right-2">
+                                        <span class="bg-red-500 text-white text-xs px-2 py-1 rounded-full">Stock: 3</span>
+                                    </div>
+                                </div>
+                                <div class="p-3">
+                                    <h3 class="font-medium text-gray-900 text-sm mb-1">Carottes bio</h3>
+                                    <p class="text-xs text-gray-500 mb-2">Légumes</p>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-sm font-semibold text-gray-900">2.20€/kg</span>
+                                        <button class="text-primary-600 text-xs">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </div>
+                                    <div class="mt-2 text-xs text-red-500">
+                                        <i class="fas fa-exclamation-triangle mr-1"></i>
+                                        <span>Stock faible</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden" data-mock="true">
+                                <div class="aspect-w-1 aspect-h-1 bg-gray-100 relative">
+                                    <div class="w-full h-32 bg-gradient-to-br from-blue-100 to-blue-200 flex items-center justify-center">
+                                        <i class="fas fa-utensils text-blue-600 text-2xl"></i>
+                                    </div>
+                                    <div class="absolute top-2 right-2">
+                                        <span class="bg-primary-600 text-white text-xs px-2 py-1 rounded-full">Stock: 8</span>
+                                    </div>
+                                </div>
+                                <div class="p-3">
+                                    <h3 class="font-medium text-gray-900 text-sm mb-1">Lasagnes végé</h3>
+                                    <p class="text-xs text-gray-500 mb-2">Plats</p>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-sm font-semibold text-gray-900">8.50€</span>
+                                        <button class="text-primary-600 text-xs">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </div>
+                                    <div class="mt-2 text-xs text-gray-500">
+                                        <i class="fas fa-clock mr-1"></i>
+                                        <span>Expire aujourd'hui</span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden" data-mock="true">
+                                <div class="aspect-w-1 aspect-h-1 bg-gray-100 relative">
+                                    <div class="w-full h-32 bg-gradient-to-br from-purple-100 to-purple-200 flex items-center justify-center">
+                                        <i class="fas fa-apple-alt text-purple-600 text-2xl"></i>
+                                    </div>
+                                    <div class="absolute top-2 right-2">
+                                        <span class="bg-primary-600 text-white text-xs px-2 py-1 rounded-full">Stock: 15</span>
+                                    </div>
+                                </div>
+                                <div class="p-3">
+                                    <h3 class="font-medium text-gray-900 text-sm mb-1">Pommes bio</h3>
+                                    <p class="text-xs text-gray-500 mb-2">Fruits</p>
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-sm font-semibold text-gray-900">4.20€/kg</span>
+                                        <button class="text-primary-600 text-xs">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                    </div>
+                                    <div class="mt-2 text-xs text-gray-500">
+                                        <i class="fas fa-clock mr-1"></i>
+                                        <span>Expire dans 5j</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- @END_MAP )) -->
+                        </div>
+                    </div>
+
+                    <!-- Add Product Modal Trigger -->
+                    <div class="p-4">
+                        <button id="add-product-btn" class="w-full bg-primary-600 text-white py-3 rounded-lg font-medium hover:bg-primary-700 transition-colors">
+                            <i class="fas fa-plus mr-2"></i>Ajouter un produit
+                        </button>
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: ProduitsTab -->
+
+                <!-- @COMPONENT: OffrirTab -->
+                <div id="offrir-tab" class="tab-content hidden">
+                    <div class="p-4">
+                        <h2 class="text-xl font-semibold text-gray-900 mb-6">Faire un don</h2>
+                        
+                        <!-- Product Selection -->
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Sélectionner un produit</label>
+                            <select class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500" data-implementation="Should populate from user's product database">
+                                <option>Choisir un produit...</option>
+                                <option>Pain de campagne (Stock: 12)</option>
+                                <option>Carottes bio (Stock: 3)</option>
+                                <option>Lasagnes végé (Stock: 8)</option>
+                                <option>Pommes bio (Stock: 15)</option>
+                            </select>
+                        </div>
+
+                        <!-- Donation Details Form -->
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4">
+                            <h3 class="font-medium text-gray-900 mb-4">Détails du don</h3>
+                            
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Quantité à donner</label>
+                                    <div class="flex items-center space-x-3">
+                                        <button class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                                            <i class="fas fa-minus text-gray-600"></i>
+                                        </button>
+                                        <input type="number" value="1" min="1" max="12" 
+                                               class="flex-1 p-3 text-center border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                                        <button class="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
+                                            <i class="fas fa-plus text-gray-600"></i>
+                                        </button>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-1">Maximum disponible: 12</p>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Quantité max par personne</label>
+                                    <input type="number" value="2" min="1" 
+                                           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Description et état</label>
+                                    <textarea rows="3" placeholder="Décrivez le produit, son état, instructions spéciales..."
+                                              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"></textarea>
+                                </div>
+
+                                <!-- Tax Benefit Calculator -->
+                                <div class="bg-primary-50 p-3 rounded-lg border border-primary-200">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-sm font-medium text-gray-700">Avantage fiscal estimé:</span>
+                                        <span class="text-lg font-bold text-primary-600" data-implementation="Calculate: quantity * unit_price * tax_rate">7.00€</span>
+                                    </div>
+                                    <p class="text-xs text-gray-500 mt-1">Basé sur le prix unitaire et la quantité</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Availability & Collection -->
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-4">
+                            <h3 class="font-medium text-gray-900 mb-4">Disponibilité et collecte</h3>
+                            
+                            <div class="space-y-4">
+                                <div class="grid grid-cols-2 gap-3">
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Date de début</label>
+                                        <input type="date" 
+                                               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                                    </div>
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 mb-2">Date de fin</label>
+                                        <input type="date" 
+                                               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Créneaux de collecte</label>
+                                    <div class="space-y-2">
+                                        <label class="flex items-center space-x-3">
+                                            <input type="checkbox" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+                                            <span class="text-sm">12h00 - 14h00 (Déjeuner)</span>
+                                        </label>
+                                        <label class="flex items-center space-x-3">
+                                            <input type="checkbox" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+                                            <span class="text-sm">19h00 - 21h00 (Dîner)</span>
+                                        </label>
+                                        <label class="flex items-center space-x-3">
+                                            <input type="checkbox" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+                                            <span class="text-sm">Toute la journée</span>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Instructions de collecte</label>
+                                    <textarea rows="2" placeholder="Entrée côté rue, demander au comptoir..."
+                                              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div class="space-y-3">
+                            <button class="w-full bg-gray-100 text-gray-700 py-3 rounded-lg font-medium border border-gray-300">
+                                <i class="fas fa-eye mr-2"></i>Prévisualiser le don
+                            </button>
+                            <button class="w-full bg-primary-600 text-white py-3 rounded-lg font-medium hover:bg-primary-700 transition-colors">
+                                <i class="fas fa-gift mr-2"></i>Publier le don
+                            </button>
+                        </div>
+
+                        <!-- Active Donations -->
+                        <div class="mt-8">
+                            <h3 class="font-medium text-gray-900 mb-4">Dons actifs</h3>
+                            <div class="space-y-3">
+                                <!-- @MAP: activeDonations.map(donation => ( -->
+                                <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200" data-mock="true">
+                                    <div class="flex items-center justify-between mb-2">
+                                        <h4 class="font-medium text-gray-900">Pain de campagne</h4>
+                                        <div class="flex space-x-2">
+                                            <button class="text-blue-600 text-sm"><i class="fas fa-edit"></i></button>
+                                            <button class="text-red-600 text-sm"><i class="fas fa-pause"></i></button>
+                                        </div>
+                                    </div>
+                                    <div class="space-y-1 text-sm text-gray-600">
+                                        <p><i class="fas fa-box mr-2"></i>Quantité: 5 unités</p>
+                                        <p><i class="fas fa-calendar mr-2"></i>Jusqu'au 25/12/2024</p>
+                                        <p><i class="fas fa-users mr-2"></i>2 personnes intéressées</p>
+                                    </div>
+                                    <div class="mt-3 flex justify-between items-center">
+                                        <span class="text-xs text-green-600 bg-green-100 px-2 py-1 rounded-full">Actif</span>
+                                        <button class="text-primary-600 text-sm font-medium">Voir détails</button>
+                                    </div>
+                                </div>
+                                <!-- @END_MAP )) -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: OffrirTab -->
+
+                <!-- @COMPONENT: HoraireTab -->
+                <div id="horaire-tab" class="tab-content hidden">
+                    <div class="p-4">
+                        <h2 class="text-xl font-semibold text-gray-900 mb-6">Horaires de collecte</h2>
+                        
+                        <!-- Business Type Selector -->
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-6">
+                            <label class="block text-sm font-medium text-gray-700 mb-3">Type d'établissement</label>
+                            <select class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                                <option selected>Alimentaire (Restaurant/Supermarché)</option>
+                                <option>Culture (Théâtre/Concert)</option>
+                                <option>Bien-être (Yoga/Sport/Coiffeur)</option>
+                            </select>
+                        </div>
+
+                        <!-- Weekly Schedule Grid -->
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-6">
+                            <h3 class="font-medium text-gray-900 mb-4">Planning hebdomadaire</h3>
+                            
+                            <div class="space-y-3">
+                                <!-- @MAP: weekDays.map(day => ( -->
+                                <div class="border border-gray-200 rounded-lg overflow-hidden" data-mock="true">
+                                    <div class="bg-gray-50 px-4 py-2 flex items-center justify-between">
+                                        <span class="font-medium text-gray-900">Lundi</span>
+                                        <label class="flex items-center">
+                                            <input type="checkbox" checked class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+                                            <span class="ml-2 text-sm text-gray-600">Ouvert</span>
+                                        </label>
+                                    </div>
+                                    <div class="p-4 space-y-2">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm text-gray-600">Collecte déjeuner</span>
+                                            <div class="flex space-x-2 text-sm">
+                                                <input type="time" value="12:00" class="px-2 py-1 border rounded text-center">
+                                                <span>-</span>
+                                                <input type="time" value="14:00" class="px-2 py-1 border rounded text-center">
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm text-gray-600">Collecte dîner</span>
+                                            <div class="flex space-x-2 text-sm">
+                                                <input type="time" value="19:00" class="px-2 py-1 border rounded text-center">
+                                                <span>-</span>
+                                                <input type="time" value="21:00" class="px-2 py-1 border rounded text-center">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <div class="border border-gray-200 rounded-lg overflow-hidden" data-mock="true">
+                                    <div class="bg-gray-50 px-4 py-2 flex items-center justify-between">
+                                        <span class="font-medium text-gray-900">Mardi</span>
+                                        <label class="flex items-center">
+                                            <input type="checkbox" checked class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+                                            <span class="ml-2 text-sm text-gray-600">Ouvert</span>
+                                        </label>
+                                    </div>
+                                    <div class="p-4 space-y-2">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm text-gray-600">Collecte déjeuner</span>
+                                            <div class="flex space-x-2 text-sm">
+                                                <input type="time" value="12:00" class="px-2 py-1 border rounded text-center">
+                                                <span>-</span>
+                                                <input type="time" value="14:00" class="px-2 py-1 border rounded text-center">
+                                            </div>
+                                        </div>
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-sm text-gray-600">Collecte dîner</span>
+                                            <div class="flex space-x-2 text-sm">
+                                                <input type="time" value="19:00" class="px-2 py-1 border rounded text-center">
+                                                <span>-</span>
+                                                <input type="time" value="21:00" class="px-2 py-1 border rounded text-center">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="border border-gray-200 rounded-lg overflow-hidden" data-mock="true">
+                                    <div class="bg-gray-50 px-4 py-2 flex items-center justify-between">
+                                        <span class="font-medium text-gray-900">Dimanche</span>
+                                        <label class="flex items-center">
+                                            <input type="checkbox" class="rounded border-gray-300 text-primary-600 focus:ring-primary-500">
+                                            <span class="ml-2 text-sm text-gray-600">Fermé</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <!-- @END_MAP )) -->
+                            </div>
+                        </div>
+
+                        <!-- Exceptional Closures -->
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-6">
+                            <h3 class="font-medium text-gray-900 mb-4">Fermetures exceptionnelles</h3>
+                            
+                            <div class="space-y-3">
+                                <div class="flex space-x-2">
+                                    <input type="date" class="flex-1 p-2 border border-gray-300 rounded-lg text-sm">
+                                    <button class="px-4 py-2 bg-primary-600 text-white rounded-lg text-sm hover:bg-primary-700">
+                                        <i class="fas fa-plus"></i>
+                                    </button>
+                                </div>
+                                
+                                <!-- Existing Closures -->
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between p-3 bg-red-50 border border-red-200 rounded-lg" data-mock="true">
+                                        <div>
+                                            <span class="text-sm font-medium text-gray-900">25 Décembre 2024</span>
+                                            <p class="text-xs text-gray-500">Noël - Fermé toute la journée</p>
+                                        </div>
+                                        <button class="text-red-600 text-sm">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Emergency Closure Toggle -->
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <h3 class="font-medium text-gray-900">Fermeture d'urgence</h3>
+                                    <p class="text-sm text-gray-500">Suspendre temporairement toutes les collectes</p>
+                                </div>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <!-- @STATE: emergencyClosure:boolean = false -->
+                                    <input type="checkbox" class="sr-only peer" data-event="change:toggleEmergencyClosure">
+                                    <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-red-600"></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: HoraireTab -->
+
+                <!-- @COMPONENT: AutresTab -->
+                <div id="autres-tab" class="tab-content hidden">
+                    <div class="p-4">
+                        <h2 class="text-xl font-semibold text-gray-900 mb-6">Paramètres et profil</h2>
+                        
+                        <!-- Business Profile -->
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-6">
+                            <h3 class="font-medium text-gray-900 mb-4">Profil de l'établissement</h3>
+                            
+                            <!-- Photo Upload -->
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Photo de l'établissement</label>
+                                <div class="flex items-center space-x-4">
+                                    <div class="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center">
+                                        <!-- @FUNCTIONALITY: Photo upload component -->
+                                        <i class="fas fa-camera text-gray-400 text-xl"></i>
+                                    </div>
+                                    <button class="px-4 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-50">
+                                        Changer la photo
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="space-y-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Nom de l'établissement</label>
+                                    <input type="text" value="Restaurant Le Jardin Bio" 
+                                           class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Type d'établissement</label>
+                                    <select class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                                        <option>Restaurant</option>
+                                        <option>Supermarché</option>
+                                        <option>Boulangerie</option>
+                                        <option>Théâtre</option>
+                                        <option>Salle de concert</option>
+                                        <option>Studio de yoga</option>
+                                        <option>Salon de coiffure</option>
+                                        <option>Centre sportif</option>
+                                        <option>Autre</option>
+                                    </select>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Description</label>
+                                    <textarea rows="3" placeholder="Décrivez votre établissement..."
+                                              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">Restaurant de cuisine biologique locale avec un engagement fort pour l'environnement.</textarea>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Adresse complète</label>
+                                    <div class="space-y-2">
+                                        <input type="text" placeholder="Numéro et rue" 
+                                               class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                                        <div class="grid grid-cols-2 gap-2">
+                                            <input type="text" placeholder="Code postal" 
+                                                   class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                                            <input type="text" placeholder="Ville" 
+                                                   class="p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Instructions de collecte</label>
+                                    <textarea rows="2" placeholder="Instructions spéciales pour la collecte..."
+                                              class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">Entrée par la porte arrière, sonner deux fois. Apporter des contenants.</textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Settings -->
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-6">
+                            <h3 class="font-medium text-gray-900 mb-4">Préférences</h3>
+                            
+                            <div class="space-y-4">
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <span class="text-sm font-medium text-gray-900">Notifications push</span>
+                                        <p class="text-xs text-gray-500">Recevoir des notifications sur l'activité</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" checked class="sr-only peer">
+                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
+                                    </label>
+                                </div>
+
+                                <div class="flex items-center justify-between">
+                                    <div>
+                                        <span class="text-sm font-medium text-gray-900">Email de rappel</span>
+                                        <p class="text-xs text-gray-500">Rappels pour les produits proches de l'expiration</p>
+                                    </div>
+                                    <label class="relative inline-flex items-center cursor-pointer">
+                                        <input type="checkbox" checked class="sr-only peer">
+                                        <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-primary-300 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
+                                    </label>
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Langue</label>
+                                    <select class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                                        <option selected>Français</option>
+                                        <option>English</option>
+                                        <option>Español</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Account Management -->
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-gray-200 mb-6">
+                            <h3 class="font-medium text-gray-900 mb-4">Gestion du compte</h3>
+                            
+                            <div class="space-y-3">
+                                <button class="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center space-x-3">
+                                            <i class="fas fa-file-alt text-gray-600"></i>
+                                            <span class="text-sm font-medium text-gray-900">Conditions générales d'utilisation</span>
+                                        </div>
+                                        <i class="fas fa-chevron-right text-gray-400"></i>
+                                    </div>
+                                </button>
+
+                                <button class="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center space-x-3">
+                                            <i class="fas fa-headset text-gray-600"></i>
+                                            <span class="text-sm font-medium text-gray-900">Contacter le support</span>
+                                        </div>
+                                        <i class="fas fa-chevron-right text-gray-400"></i>
+                                    </div>
+                                </button>
+
+                                <button class="w-full text-left p-3 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                                    <div class="flex items-center justify-between">
+                                        <div class="flex items-center space-x-3">
+                                            <i class="fas fa-download text-gray-600"></i>
+                                            <span class="text-sm font-medium text-gray-900">Exporter mes données</span>
+                                        </div>
+                                        <i class="fas fa-chevron-right text-gray-400"></i>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Danger Zone -->
+                        <div class="bg-white p-4 rounded-lg shadow-sm border border-red-200 mb-6">
+                            <h3 class="font-medium text-red-900 mb-4">Zone de danger</h3>
+                            
+                            <div class="space-y-3">
+                                <button class="w-full p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 hover:bg-red-100 transition-colors">
+                                    <div class="flex items-center justify-center space-x-2">
+                                        <i class="fas fa-trash"></i>
+                                        <span class="text-sm font-medium">Supprimer mon compte</span>
+                                    </div>
+                                </button>
+
+                                <button class="w-full p-3 bg-gray-100 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-200 transition-colors">
+                                    <div class="flex items-center justify-center space-x-2">
+                                        <i class="fas fa-sign-out-alt"></i>
+                                        <span class="text-sm font-medium">Se déconnecter</span>
+                                    </div>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- @END_COMPONENT: AutresTab -->
+
+            </div>
+        </main>
+        <!-- @END_COMPONENT: MainContent -->
+
+        <!-- @COMPONENT: FloatingActionButton -->
+        <button class="fixed bottom-24 right-4 w-14 h-14 bg-primary-600 text-white rounded-full shadow-lg hover:bg-primary-700 transition-all duration-300 hover:scale-110 z-40">
+            <i class="fas fa-plus text-xl"></i>
+        </button>
+        <!-- @END_COMPONENT: FloatingActionButton -->
+
+        <!-- @COMPONENT: BottomNavigation -->
+        <nav class="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 z-50">
+            <div class="max-w-md mx-auto px-4">
+                <div class="flex justify-around py-2">
+                    <button class="nav-item active flex flex-col items-center p-2 min-w-0 flex-1" data-tab="accueil">
+                        <i class="fas fa-home text-lg mb-1"></i>
+                        <span class="text-xs font-medium">Accueil</span>
+                    </button>
+                    <button class="nav-item flex flex-col items-center p-2 min-w-0 flex-1" data-tab="produits">
+                        <i class="fas fa-box text-lg mb-1"></i>
+                        <span class="text-xs font-medium">Produits</span>
+                    </button>
+                    <button class="nav-item flex flex-col items-center p-2 min-w-0 flex-1" data-tab="offrir">
+                        <i class="fas fa-gift text-lg mb-1"></i>
+                        <span class="text-xs font-medium">Offrir</span>
+                    </button>
+                    <button class="nav-item flex flex-col items-center p-2 min-w-0 flex-1" data-tab="horaire">
+                        <i class="fas fa-clock text-lg mb-1"></i>
+                        <span class="text-xs font-medium">Horaire</span>
+                    </button>
+                    <button class="nav-item flex flex-col items-center p-2 min-w-0 flex-1" data-tab="autres">
+                        <i class="fas fa-cog text-lg mb-1"></i>
+                        <span class="text-xs font-medium">Autres</span>
+                    </button>
+                </div>
+            </div>
+        </nav>
+        <!-- @END_COMPONENT: BottomNavigation -->
+
+        <!-- @COMPONENT: AddProductModal -->
+        <div id="add-product-modal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden">
+            <div class="absolute bottom-0 left-0 right-0 bg-white rounded-t-2xl max-w-md mx-auto">
+                <div class="p-4 border-b border-gray-200">
+                    <div class="flex items-center justify-between">
+                        <h3 class="text-lg font-semibold text-gray-900">Ajouter un produit</h3>
+                        <button id="close-modal" class="p-2 text-gray-400 hover:text-gray-600">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                </div>
+                
+                <div class="p-4 max-h-96 overflow-y-auto">
+                    <form class="space-y-4">
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Nom du produit</label>
+                            <input type="text" placeholder="Ex: Pain de campagne" 
+                                   class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Catégorie</label>
+                            <select class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                                <option>Sélectionner une catégorie</option>
+                                <option>Boulangerie</option>
+                                <option>Plats</option>
+                                <option>Légumes</option>
+                                <option>Fruits</option>
+                                <option>Boissons</option>
+                                <option>Desserts</option>
+                                <option>Autres</option>
+                            </select>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Prix unitaire</label>
+                                <input type="number" step="0.01" placeholder="3.50" 
+                                       class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Stock actuel</label>
+                                <input type="number" placeholder="12" 
+                                       class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Date d'expiration</label>
+                            <input type="date" 
+                                   class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500">
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Photo du produit</label>
+                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
+                                <i class="fas fa-camera text-3xl text-gray-400 mb-2"></i>
+                                <p class="text-sm text-gray-500">Cliquer pour ajouter une photo</p>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Description (optionnel)</label>
+                            <textarea rows="3" placeholder="Description du produit..."
+                                      class="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"></textarea>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="p-4 border-t border-gray-200 space-y-3">
+                    <button class="w-full bg-primary-600 text-white py-3 rounded-lg font-medium hover:bg-primary-700 transition-colors">
+                        Ajouter le produit
+                    </button>
+                    <button id="cancel-modal" class="w-full bg-gray-100 text-gray-700 py-3 rounded-lg font-medium hover:bg-gray-200 transition-colors">
+                        Annuler
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- @END_COMPONENT: AddProductModal -->
+
+    </div>
+
+    <script>
+        // TODO: Implement business logic, API calls, or state management
+        (function() {
+            // Navigation Tab Switching
+            const navItems = document.querySelectorAll('.nav-item');
+            const tabContents = document.querySelectorAll('.tab-content');
+
+            navItems.forEach(item => {
+                item.addEventListener('click', () => {
+                    const tabId = item.getAttribute('data-tab');
+                    
+                    // Remove active class from all nav items and tabs
+                    navItems.forEach(nav => nav.classList.remove('active'));
+                    tabContents.forEach(tab => tab.classList.add('hidden'));
+                    
+                    // Add active class to clicked nav item and show corresponding tab
+                    item.classList.add('active');
+                    document.getElementById(tabId + '-tab').classList.remove('hidden');
+                });
+            });
+
+            // Product View Toggle
+            const gridViewBtn = document.getElementById('grid-view-btn');
+            const listViewBtn = document.getElementById('list-view-btn');
+            const productsGrid = document.getElementById('products-grid');
+
+            if (gridViewBtn && listViewBtn) {
+                gridViewBtn.addEventListener('click', () => {
+                    gridViewBtn.classList.add('bg-primary-100', 'text-primary-600');
+                    gridViewBtn.classList.remove('text-gray-400');
+                    listViewBtn.classList.add('text-gray-400');
+                    listViewBtn.classList.remove('bg-primary-100', 'text-primary-600');
+                    productsGrid.className = 'grid grid-cols-2 gap-3';
+                });
+
+                listViewBtn.addEventListener('click', () => {
+                    listViewBtn.classList.add('bg-primary-100', 'text-primary-600');
+                    listViewBtn.classList.remove('text-gray-400');
+                    gridViewBtn.classList.add('text-gray-400');
+                    gridViewBtn.classList.remove('bg-primary-100', 'text-primary-600');
+                    productsGrid.className = 'grid grid-cols-1 gap-3';
+                });
+            }
+
+            // Modal Management
+            const addProductBtn = document.getElementById('add-product-btn');
+            const addProductModal = document.getElementById('add-product-modal');
+            const closeModal = document.getElementById('close-modal');
+            const cancelModal = document.getElementById('cancel-modal');
+
+            if (addProductBtn && addProductModal) {
+                addProductBtn.addEventListener('click', () => {
+                    addProductModal.classList.remove('hidden');
+                });
+
+                [closeModal, cancelModal].forEach(btn => {
+                    if (btn) {
+                        btn.addEventListener('click', () => {
+                            addProductModal.classList.add('hidden');
+                        });
+                    }
+                });
+
+                // Close modal on backdrop click
+                addProductModal.addEventListener('click', (e) => {
+                    if (e.target === addProductModal) {
+                        addProductModal.classList.add('hidden');
+                    }
+                });
+            }
+
+            // Quantity Controls for Donation Form
+            const quantityControls = document.querySelectorAll('.fa-minus, .fa-plus');
+            quantityControls.forEach(control => {
+                control.addEventListener('click', (e) => {
+                    const input = control.closest('.flex').querySelector('input[type="number"]');
+                    const isPlus = control.classList.contains('fa-plus');
+                    const currentValue = parseInt(input.value) || 0;
+                    const max = parseInt(input.getAttribute('max')) || 999;
+                    const min = parseInt(input.getAttribute('min')) || 1;
+                    
+                    if (isPlus && currentValue < max) {
+                        input.value = currentValue + 1;
+                    } else if (!isPlus && currentValue > min) {
+                        input.value = currentValue - 1;
+                    }
+                });
+            });
+
+            // Initialize active navigation state
+            const activeNavItem = document.querySelector('.nav-item.active');
+            if (activeNavItem) {
+                const tabId = activeNavItem.getAttribute('data-tab');
+                tabContents.forEach(tab => tab.classList.add('hidden'));
+                document.getElementById(tabId + '-tab').classList.remove('hidden');
+            }
+        })();
+    </script>
+
+    <style>
+        .nav-item {
+            @apply text-gray-500 transition-colors duration-200;
+        }
+        
+        .nav-item.active {
+            @apply text-primary-600;
+        }
+        
+        .nav-item:hover {
+            @apply text-primary-500;
+        }
+        
+        .tab-content {
+            @apply min-h-screen;
+        }
+        
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #16a34a;
+            border-radius: 2px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #15803d;
+        }
+        
+        /* Focus styles for accessibility */
+        button:focus,
+        input:focus,
+        select:focus,
+        textarea:focus {
+            outline: 2px solid #16a34a;
+            outline-offset: 2px;
+        }
+        
+        /* Loading animation */
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+        
+        .animate-spin {
+            animation: spin 1s linear infinite;
+        }
+        
+        /* Smooth transitions */
+        * {
+            transition-duration: 200ms;
+            transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+        }
+    </style>
+</body>
+</html>

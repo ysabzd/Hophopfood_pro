@@ -147,7 +147,6 @@ export default function ProduitsTab() {
           <div className={viewMode === "grid" ? "grid grid-cols-2 gap-3" : "grid grid-cols-1 gap-3"}>
             {filteredProducts.map((product) => {
               const expiryStatus = getExpiryStatus(product.expiryDate);
-              const isLowStock = product.currentStock <= 5;
               
               return (
                 <Card key={product.id} className="overflow-hidden">
@@ -156,13 +155,6 @@ export default function ProduitsTab() {
                       <>
                         <div className="aspect-square bg-gradient-to-br from-primary-100 to-primary-200 relative flex items-center justify-center">
                           <span className="text-3xl">{getCategoryIcon(product.category)}</span>
-                          <div className="absolute top-2 right-2">
-                            <span className={`text-white text-xs px-2 py-1 rounded-full ${
-                              isLowStock ? "bg-red-500" : "bg-primary-600"
-                            }`}>
-                              Stock: {product.currentStock}
-                            </span>
-                          </div>
                         </div>
                         <div className="p-3">
                           <h3 className="font-medium text-gray-900 text-sm mb-1">{product.name}</h3>
@@ -181,12 +173,6 @@ export default function ProduitsTab() {
                               <span>{expiryStatus.text}</span>
                             </div>
                           )}
-                          {isLowStock && (
-                            <div className="mt-2 text-xs text-red-500 flex items-center">
-                              <AlertTriangle className="w-3 h-3 mr-1" />
-                              <span>Stock faible</span>
-                            </div>
-                          )}
                         </div>
                       </>
                     ) : (
@@ -200,11 +186,6 @@ export default function ProduitsTab() {
                           <div className="flex items-center justify-between mt-2">
                             <span className="text-sm font-semibold text-gray-900">
                               {parseFloat(product.unitPrice).toFixed(2)}€
-                            </span>
-                            <span className={`text-sm px-2 py-1 rounded-full ${
-                              isLowStock ? "bg-red-100 text-red-800" : "bg-primary-100 text-primary-800"
-                            }`}>
-                              Stock: {product.currentStock}
                             </span>
                           </div>
                           {expiryStatus && (

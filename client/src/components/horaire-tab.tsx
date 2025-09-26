@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Clock, Settings, Check, AlertCircle, ChevronDown, ChevronUp } from "lucide-react";
+import { Clock, Settings, Plus, Minus, ChevronDown, ChevronUp, Sun, Moon, Calendar } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -11,24 +11,47 @@ import { useSchedule } from "@/hooks/use-schedule";
 import { useToast } from "@/hooks/use-toast";
 
 export default function HoraireTab() {
-  const [businessType, setBusinessType] = useState("alimentaire");
-  const [showSettings, setShowSettings] = useState(false);
-  const [collectionMethod, setCollectionMethod] = useState("pickup");
-  const [expandedDay, setExpandedDay] = useState<number | null>(null);
+  const [businessType, setBusinessType] = useState("restaurant");
   const { data: schedules = [], createOrUpdateSchedule } = useSchedule();
   const { toast } = useToast();
 
   const businessTypes = [
-    { value: "alimentaire", label: "Restaurant", icon: "🍽️", color: "bg-green-50 border-green-200" },
-    { value: "culture", label: "Culture", icon: "🎭", color: "bg-purple-50 border-purple-200" },
-    { value: "bien-etre", label: "Bien-être", icon: "🧘", color: "bg-blue-50 border-blue-200" }
+    {
+      value: "restaurant",
+      label: "Restaurant",
+      icon: "🍽️",
+      color: "bg-green-50 border-green-200",
+      description: "2 services: matin et soir"
+    },
+    {
+      value: "culture",
+      label: "Culture",
+      icon: "🎭",
+      color: "bg-purple-50 border-purple-200",
+      description: "Ouvert toute la journée"
+    },
+    {
+      value: "bien-etre",
+      label: "Bien-être",
+      icon: "🧘",
+      color: "bg-blue-50 border-blue-200",
+      description: "Créneaux personnalisés"
+    }
   ];
 
-  const collectionMethods = [
-    { value: "pickup", label: "Sur place", icon: "🏪" },
-    { value: "delivery", label: "Livraison", icon: "🚚" },
-    { value: "hybrid", label: "Mixte", icon: "🔄" }
-  ];
+  // Generate time options in 24h format
+  const generateTimeOptions = () => {
+    const options = [];
+    for (let hour = 0; hour < 24; hour++) {
+      for (let minute of [0, 30]) {
+        const timeString = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+        options.push(timeString);
+      }
+    }
+    return options;
+  };
+
+  const timeOptions = generateTimeOptions();
 
   const weekDays = [
     { id: 1, name: "Lun", fullName: "Lundi", isWeekend: false },
@@ -42,44 +65,75 @@ export default function HoraireTab() {
 
   const getCurrentBusinessType = () => businessTypes.find(bt => bt.value === businessType);
 
-  // Initialize schedules
+  // Initialize empty schedules and adapt when business type changes
   useEffect(() => {
     const initializeSchedules = async () => {
-      const currentType = getCurrentBusinessType();
-      if (!currentType) return;
-      
       for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
-        const isOpen = businessType === "alimentaire" ? true : !weekDays.find(d => d.id === dayOfWeek)?.isWeekend;
-        
-        let timeSlots = [];
-        if (businessType === "alimentaire") {
-          timeSlots = [
-            { startTime: "11:30", endTime: "14:30", label: "Déjeuner" },
-            { startTime: "18:30", endTime: "22:00", label: "Dîner" }
-          ];
-        } else if (businessType === "culture") {
-          timeSlots = [
-            { startTime: "14:00", endTime: "17:00", label: "Matinée" },
-            { startTime: "20:00", endTime: "23:00", label: "Soirée" }
-          ];
-        } else {
-          timeSlots = [
-            { startTime: "08:00", endTime: "12:00", label: "Matin" },
-            { startTime: "14:00", endTime: "18:00", label: "Après-midi" }
-          ];
-        }
-        
         await createOrUpdateSchedule.mutateAsync({
           businessId: "demo-business-1",
           dayOfWeek,
-          isOpen,
-          timeSlots,
+          isOpen: false,
+          timeSlots: [],
           businessType
         });
       }
     };
 
-    initializeSchedules();
+    const adaptSchedulesToBusinessType = async () => {
+      for (let dayOfWeek = 0; dayOfWeek < 7; dayOfWeek++) {
+        const schedule = getScheduleForDay(dayOfWeek);
+        if (!schedule) continue;
+
+        let adaptedTimeSlots = [];
+
+        if (businessType === "restaurant") {
+          // Convertir vers restaurant (max 2 créneaux: matin + soir)
+          if (schedule.timeSlots.length > 0) {
+            adaptedTimeSlots = [
+              { startTime: "11:30", endTime: "14:30", label: "Matin", type: "morning" }
+            ];
+            if (schedule.timeSlots.length > 1) {
+              adaptedTimeSlots.push(
+                { startTime: "18:30", endTime: "22:00", label: "Soir", type: "evening" }
+              );
+            }
+          }
+        } else if (businessType === "culture") {
+          // Convertir vers culture (1 seul créneau)
+          if (schedule.timeSlots.length > 0) {
+            adaptedTimeSlots = [
+              { startTime: "09:00", endTime: "18:00", label: "Toute la journée", type: "all_day" }
+            ];
+          }
+        } else if (businessType === "bien-etre") {
+          // Convertir vers bien-être (créneaux personnalisables)
+          if (schedule.timeSlots.length > 0) {
+            adaptedTimeSlots = schedule.timeSlots.map((slot, index) => ({
+              startTime: slot.startTime,
+              endTime: slot.endTime,
+              label: `Créneau ${index + 1}`,
+              type: "custom"
+            }));
+          }
+        }
+
+        await createOrUpdateSchedule.mutateAsync({
+          businessId: "demo-business-1",
+          dayOfWeek,
+          isOpen: schedule.isOpen,
+          timeSlots: adaptedTimeSlots,
+          businessType
+        });
+      }
+    };
+
+    if (schedules.length === 0) {
+      // Première initialisation
+      initializeSchedules();
+    } else {
+      // Adapter les horaires existants au nouveau type d'établissement
+      adaptSchedulesToBusinessType();
+    }
   }, [businessType]);
 
   const getScheduleForDay = (dayOfWeek: number) => {
@@ -116,6 +170,63 @@ export default function HoraireTab() {
     });
   };
 
+  const addTimeSlot = async (dayOfWeek: number) => {
+    const schedule = getScheduleForDay(dayOfWeek);
+    if (!schedule) return;
+
+    let newSlot;
+    if (businessType === "restaurant") {
+      // Restaurant: 2 créneaux max (matin + soir)
+      if (schedule.timeSlots.length >= 2) return;
+      if (schedule.timeSlots.length === 0) {
+        newSlot = { startTime: "11:30", endTime: "14:30", label: "Matin", type: "morning" };
+      } else {
+        newSlot = { startTime: "18:30", endTime: "22:00", label: "Soir", type: "evening" };
+      }
+    } else if (businessType === "culture") {
+      // Culture: 1 seul créneau modifiable
+      if (schedule.timeSlots.length >= 1) return;
+      newSlot = { startTime: "09:00", endTime: "18:00", label: "Toute la journée", type: "all_day" };
+    } else {
+      // Bien-être: plusieurs créneaux personnalisables
+      newSlot = {
+        startTime: "09:00",
+        endTime: "12:00",
+        label: `Créneau ${schedule.timeSlots.length + 1}`,
+        type: "custom"
+      };
+    }
+
+    await createOrUpdateSchedule.mutateAsync({
+      businessId: "demo-business-1",
+      dayOfWeek,
+      isOpen: schedule.isOpen,
+      timeSlots: [...schedule.timeSlots, newSlot],
+      businessType
+    });
+  };
+
+  const removeTimeSlot = async (dayOfWeek: number, slotIndex: number) => {
+    const schedule = getScheduleForDay(dayOfWeek);
+    if (!schedule) return;
+
+    // Restaurant et Culture: ne pas supprimer si c'est le dernier
+    if ((businessType === "restaurant" || businessType === "culture") && schedule.timeSlots.length <= 1) return;
+
+    // Bien-être: peut supprimer tant qu'il reste au moins 1
+    if (businessType === "bien-etre" && schedule.timeSlots.length <= 1) return;
+
+    const updatedSlots = schedule.timeSlots.filter((_, index) => index !== slotIndex);
+
+    await createOrUpdateSchedule.mutateAsync({
+      businessId: "demo-business-1",
+      dayOfWeek,
+      isOpen: schedule.isOpen,
+      timeSlots: updatedSlots,
+      businessType
+    });
+  };
+
   return (
     <div className="p-4 space-y-4 pb-24">
       {/* Header */}
@@ -124,184 +235,203 @@ export default function HoraireTab() {
           <Clock className="w-5 h-5 text-primary-600" />
           <h2 className="text-lg font-bold text-gray-900">Horaires</h2>
         </div>
-        <Button 
-          variant="ghost" 
-          size="sm" 
-          onClick={() => setShowSettings(!showSettings)}
+        <Button
+          variant="ghost"
+          size="sm"
         >
           <Settings className="w-4 h-4" />
         </Button>
       </div>
 
-      {/* Business Type & Collection Method */}
-      <Card className={`${getCurrentBusinessType()?.color || 'bg-gray-50 border-gray-200'} transition-all`}>
+      {/* Business Type Selection */}
+      <Card className="bg-gray-50 border-gray-200">
         <CardContent className="p-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3">
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-center space-x-2">
               <span className="text-2xl">{getCurrentBusinessType()?.icon}</span>
               <div>
                 <h3 className="font-medium text-gray-900">{getCurrentBusinessType()?.label}</h3>
-                <p className="text-sm text-gray-600 flex items-center space-x-2">
-                  <span>{collectionMethods.find(m => m.value === collectionMethod)?.icon}</span>
-                  <span>{collectionMethods.find(m => m.value === collectionMethod)?.label}</span>
-                </p>
+                <p className="text-sm text-gray-500">Sur place</p>
               </div>
             </div>
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={() => setShowSettings(!showSettings)}
-              className="text-gray-500"
-            >
-              {showSettings ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+            <Button variant="ghost" size="sm" className="text-gray-400">
+              ⌄
             </Button>
           </div>
 
-          {/* Settings Accordion */}
-          {showSettings && (
-            <div className="mt-4 pt-4 border-t border-gray-200 space-y-4">
-              <div>
-                <Label className="text-sm font-medium mb-2 block">Type d'établissement</Label>
-                <div className="grid grid-cols-3 gap-2">
-                  {businessTypes.map((type) => (
-                    <button
-                      key={type.value}
-                      onClick={() => setBusinessType(type.value)}
-                      className={`p-2 rounded-lg text-xs transition-all ${
-                        businessType === type.value 
-                          ? "bg-primary-600 text-white" 
-                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                      }`}
-                    >
-                      <div className="text-base">{type.icon}</div>
-                      <div className="font-medium mt-1">{type.label}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div>
-                <Label className="text-sm font-medium mb-2 block">Mode de collecte</Label>
-                <div className="grid grid-cols-3 gap-2">
-                  {collectionMethods.map((method) => (
-                    <button
-                      key={method.value}
-                      onClick={() => setCollectionMethod(method.value)}
-                      className={`p-2 rounded-lg text-xs transition-all ${
-                        collectionMethod === method.value 
-                          ? "bg-primary-600 text-white" 
-                          : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                      }`}
-                    >
-                      <div className="text-base">{method.icon}</div>
-                      <div className="font-medium mt-1">{method.label}</div>
-                    </button>
-                  ))}
-                </div>
-              </div>
+          <div>
+            <Label className="text-sm font-medium text-gray-700 mb-3 block">Type d'établissement</Label>
+            <div className="flex space-x-2">
+              {businessTypes.map((type) => (
+                <button
+                  key={type.value}
+                  onClick={() => setBusinessType(type.value)}
+                  className={`flex items-center space-x-1 px-3 py-2 rounded-full text-sm font-medium transition-all ${
+                    businessType === type.value
+                      ? "bg-primary-600 text-white"
+                      : "bg-white text-gray-600 border border-gray-200"
+                  }`}
+                >
+                  <span className="text-lg">{type.icon}</span>
+                  <span>{type.label}</span>
+                </button>
+              ))}
             </div>
-          )}
+          </div>
         </CardContent>
       </Card>
 
-      {/* Schedule Cards - Mobile First */}
+      {/* Schedule Days */}
       <div className="space-y-3">
         {weekDays.map((day) => {
           const schedule = getScheduleForDay(day.id);
           const isOpen = schedule?.isOpen ?? false;
           const timeSlots = schedule?.timeSlots ?? [];
-          const isExpanded = expandedDay === day.id;
+          const dayColors = {
+            1: "bg-blue-500", // Lundi
+            2: "bg-teal-500", // Mardi
+            3: "bg-teal-500", // Mercredi
+            4: "bg-teal-500", // Jeudi
+            5: "bg-gray-400", // Vendredi
+            6: "bg-gray-400", // Samedi
+            0: "bg-gray-400", // Dimanche
+          };
 
           return (
-            <Card key={day.id} className={`transition-all ${
-              isOpen 
-                ? "border-green-200 bg-green-50" 
-                : "border-gray-200 bg-gray-50"
-            }`}>
-              <CardContent className="p-0">
-                {/* Day Header - Always Visible */}
-                <div 
-                  className="p-4 cursor-pointer"
-                  onClick={() => setExpandedDay(isExpanded ? null : day.id)}
-                >
-                  <div className="flex items-center justify-between">
-                    <div className="flex items-center space-x-3">
-                      <div className={`w-8 h-8 rounded-full flex items-center justify-center ${
-                        isOpen ? "bg-green-600 text-white" : "bg-gray-400 text-white"
-                      }`}>
-                        <span className="text-xs font-bold">{day.name}</span>
-                      </div>
-                      <div>
-                        <h3 className="font-medium text-gray-900">{day.fullName}</h3>
-                        <p className="text-xs text-gray-500">
-                          {isOpen ? (
-                            timeSlots.length > 0 
-                              ? `${timeSlots.length} créneaux` 
-                              : "Ouvert"
-                          ) : "Fermé"}
-                        </p>
-                      </div>
+            <Card key={day.id} className={`${isOpen ? "bg-green-50 border-green-200" : "bg-white border-gray-200"}`}>
+              <CardContent className="p-4">
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center space-x-3">
+                    <div className={`w-10 h-10 ${dayColors[day.id]} rounded-full flex items-center justify-center`}>
+                      <span className="text-white text-xs font-bold">{day.name}</span>
                     </div>
-                    
-                    <div className="flex items-center space-x-2">
-                      <Switch 
-                        checked={isOpen} 
-                        onCheckedChange={() => toggleDayOpen(day.id)}
-                        className="data-[state=checked]:bg-green-600"
-                      />
-                      {isOpen && (
-                        <div className="text-gray-400">
-                          {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                        </div>
-                      )}
+                    <div>
+                      <h3 className="font-medium text-gray-900">{day.fullName}</h3>
+                      <p className="text-sm text-gray-500">
+                        {isOpen ? `${timeSlots.length}/2 créneaux` : "Fermé"}
+                      </p>
                     </div>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      checked={isOpen}
+                      onCheckedChange={() => toggleDayOpen(day.id)}
+                      className="data-[state=checked]:bg-green-600"
+                    />
+                    {isOpen && (
+                      <Button variant="ghost" size="sm" className="text-gray-400">
+                        ⌄
+                      </Button>
+                    )}
                   </div>
                 </div>
 
-                {/* Time Slots - Expandable */}
-                {isOpen && isExpanded && (
-                  <div className="px-4 pb-4 space-y-3 border-t border-green-200 pt-4">
-                    {timeSlots.map((slot, index) => (
-                      <div key={index} className="bg-white rounded-lg p-3 border border-green-200">
-                        <div className="flex items-center justify-between mb-2">
-                          <Label className="text-sm font-medium text-gray-700">{slot.label}</Label>
-                          <Badge variant="outline" className="text-xs">Actif</Badge>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <Input
-                            type="time"
-                            value={slot.startTime}
-                            onChange={(e) => updateTimeSlot(day.id, index, "startTime", e.target.value)}
-                            className="text-center text-sm"
-                          />
-                          <span className="text-gray-400 text-sm">à</span>
-                          <Input
-                            type="time"
-                            value={slot.endTime}
-                            onChange={(e) => updateTimeSlot(day.id, index, "endTime", e.target.value)}
-                            className="text-center text-sm"
-                          />
+                {isOpen && (
+                  <div className="space-y-3">
+                    {timeSlots.length === 0 ? (
+                      <Button
+                        variant="outline"
+                        onClick={() => addTimeSlot(day.id)}
+                        className="w-full border-dashed border-2 border-green-300 text-green-600 hover:bg-green-50"
+                      >
+                        <Plus className="w-4 h-4 mr-2" />
+                        Ajouter un créneau
+                      </Button>
+                    ) : (
+                      <div className="space-y-3">
+                        {timeSlots.map((slot, index) => (
+                          <div key={index} className="space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm font-medium text-gray-700">
+                                {slot.type === "morning" ? "Matin" :
+                                 slot.type === "evening" ? "Soir" :
+                                 slot.type === "all_day" ? "Toute la journée" :
+                                 slot.label}
+                              </span>
+                              <div className="flex items-center space-x-2">
+                                <Switch
+                                  checked={true}
+                                  className="data-[state=checked]:bg-green-600 scale-75"
+                                  readOnly
+                                />
+                                <Badge variant="secondary" className="bg-green-100 text-green-700 text-xs">
+                                  Actif
+                                </Badge>
+                                {/* Bouton supprimer selon les règles */}
+                                {((businessType === "restaurant" && timeSlots.length > 1) ||
+                                  (businessType === "bien-etre" && timeSlots.length > 1)) && (
+                                  <Button
+                                    variant="ghost"
+                                    size="sm"
+                                    onClick={() => removeTimeSlot(day.id, index)}
+                                    className="text-red-500 hover:text-red-700 h-6 w-6 p-0"
+                                  >
+                                    <Minus className="w-3 h-3" />
+                                  </Button>
+                                )}
+                              </div>
+                            </div>
+                            <div className="flex items-center space-x-2">
+                              <Select
+                                value={slot.startTime}
+                                onValueChange={(value) => updateTimeSlot(day.id, index, "startTime", value)}
+                              >
+                                <SelectTrigger className="w-20 h-8">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {timeOptions.map((time) => (
+                                    <SelectItem key={time} value={time}>
+                                      {time}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                              <span className="text-gray-400">à</span>
+                              <Select
+                                value={slot.endTime}
+                                onValueChange={(value) => updateTimeSlot(day.id, index, "endTime", value)}
+                              >
+                                <SelectTrigger className="w-20 h-8">
+                                  <SelectValue />
+                                </SelectTrigger>
+                                <SelectContent>
+                                  {timeOptions.map((time) => (
+                                    <SelectItem key={time} value={time}>
+                                      {time}
+                                    </SelectItem>
+                                  ))}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          </div>
+                        ))}
+
+                        {/* Bouton ajouter selon les règles */}
+                        {((businessType === "restaurant" && timeSlots.length < 2) ||
+                          (businessType === "bien-etre")) && (
+                          <Button
+                            variant="outline"
+                            onClick={() => addTimeSlot(day.id)}
+                            className="w-full border-dashed border-2 border-green-300 text-green-600 hover:bg-green-50"
+                          >
+                            <Plus className="w-4 h-4 mr-2" />
+                            {businessType === "restaurant" && timeSlots.length === 0 && "Ajouter service matin (ex: 11:30-14:30)"}
+                            {businessType === "restaurant" && timeSlots.length === 1 && "Ajouter service soir (ex: 18:30-22:00)"}
+                            {businessType === "bien-etre" && "Ajouter un créneau (ex: 09:00-12:00)"}
+                          </Button>
+                        )}
+
+                        {/* Badges des créneaux */}
+                        <div className="flex flex-wrap gap-2 mt-2">
+                          {timeSlots.map((slot, index) => (
+                            <Badge key={index} variant="secondary" className="bg-gray-900 text-white hover:bg-gray-800">
+                              {slot.startTime}-{slot.endTime}
+                            </Badge>
+                          ))}
                         </div>
                       </div>
-                    ))}
-                  </div>
-                )}
-
-                {/* Quick Preview for Closed State */}
-                {isOpen && !isExpanded && timeSlots.length > 0 && (
-                  <div className="px-4 pb-3">
-                    <div className="flex space-x-2">
-                      {timeSlots.slice(0, 2).map((slot, index) => (
-                        <Badge key={index} variant="secondary" className="text-xs">
-                          {slot.startTime}-{slot.endTime}
-                        </Badge>
-                      ))}
-                      {timeSlots.length > 2 && (
-                        <Badge variant="outline" className="text-xs">
-                          +{timeSlots.length - 2}
-                        </Badge>
-                      )}
-                    </div>
+                    )}
                   </div>
                 )}
               </CardContent>
@@ -313,49 +443,134 @@ export default function HoraireTab() {
       {/* Quick Actions */}
       <Card>
         <CardContent className="p-4">
-          <div className="flex space-x-2">
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="flex-1 text-xs"
-              onClick={() => {
-                // Copy Monday schedule to weekdays
-                const mondaySchedule = getScheduleForDay(1);
-                if (mondaySchedule) {
-                  weekDays.slice(1, 6).forEach(day => {
+          <div className="space-y-3">
+            <div className="flex space-x-2">
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex-1 text-xs"
+                onClick={() => {
+                  // Copy Monday schedule to weekdays
+                  const mondaySchedule = getScheduleForDay(1);
+                  if (mondaySchedule) {
+                    weekDays.slice(1, 6).forEach(day => {
+                      createOrUpdateSchedule.mutate({
+                        businessId: "demo-business-1",
+                        dayOfWeek: day.id,
+                        isOpen: true,
+                        timeSlots: mondaySchedule.timeSlots,
+                        businessType
+                      });
+                    });
+                    toast({ title: "Horaires synchronisés", description: "Lundi appliqué aux jours ouvrables" });
+                  }
+                }}
+              >
+                Même horaire
+              </Button>
+              <Button
+                variant="outline"
+                size="sm"
+                className="flex-1 text-xs"
+                onClick={() => {
+                  weekDays.forEach(day => {
                     createOrUpdateSchedule.mutate({
                       businessId: "demo-business-1",
                       dayOfWeek: day.id,
-                      isOpen: true,
-                      timeSlots: mondaySchedule.timeSlots,
+                      isOpen: false,
+                      timeSlots: [],
                       businessType
                     });
                   });
-                  toast({ title: "Horaires synchronisés", description: "Lundi appliqué aux jours ouvrables" });
-                }
-              }}
-            >
-              Même horaire
-            </Button>
-            <Button 
-              variant="outline" 
-              size="sm" 
-              className="flex-1 text-xs"
-              onClick={() => {
-                weekDays.forEach(day => {
-                  createOrUpdateSchedule.mutate({
-                    businessId: "demo-business-1",
-                    dayOfWeek: day.id,
-                    isOpen: false,
-                    timeSlots: [],
-                    businessType
-                  });
-                });
-                toast({ title: "Fermé", description: "Tous les jours fermés" });
-              }}
-            >
-              Tout fermer
-            </Button>
+                  toast({ title: "Fermé", description: "Tous les jours fermés" });
+                }}
+              >
+                Tout fermer
+              </Button>
+            </div>
+
+            {/* Example Schedules */}
+            <div>
+              <Label className="text-sm font-medium text-gray-700 mb-2 block">Exemples d'horaires</Label>
+              <div className="grid grid-cols-1 gap-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-xs justify-start"
+                  onClick={() => {
+                    let exampleSlots = [];
+                    if (businessType === "restaurant") {
+                      exampleSlots = [
+                        { startTime: "11:30", endTime: "14:30", label: "Service midi", type: "morning" },
+                        { startTime: "18:30", endTime: "22:00", label: "Service soir", type: "evening" }
+                      ];
+                    } else if (businessType === "culture") {
+                      exampleSlots = [
+                        { startTime: "09:00", endTime: "18:00", label: "Toute la journée", type: "all_day" }
+                      ];
+                    } else if (businessType === "bien-etre") {
+                      exampleSlots = [
+                        { startTime: "09:00", endTime: "12:00", label: "Matinée", type: "custom" },
+                        { startTime: "14:00", endTime: "17:00", label: "Après-midi", type: "custom" }
+                      ];
+                    }
+
+                    weekDays.slice(1, 6).forEach(day => {
+                      createOrUpdateSchedule.mutate({
+                        businessId: "demo-business-1",
+                        dayOfWeek: day.id,
+                        isOpen: true,
+                        timeSlots: exampleSlots,
+                        businessType
+                      });
+                    });
+                    toast({ title: "Exemple appliqué", description: "Horaires d'exemple appliqués aux jours ouvrables" });
+                  }}
+                >
+                  {businessType === "restaurant" && "🍽️ Restaurant (11h30-14h30, 18h30-22h)"}
+                  {businessType === "culture" && "🎭 Culture (9h-18h)"}
+                  {businessType === "bien-etre" && "🧘 Bien-être (9h-12h, 14h-17h)"}
+                </Button>
+
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="text-xs justify-start"
+                  onClick={() => {
+                    let exampleSlots = [];
+                    if (businessType === "restaurant") {
+                      exampleSlots = [
+                        { startTime: "12:00", endTime: "15:00", label: "Déjeuner", type: "morning" },
+                        { startTime: "19:00", endTime: "23:00", label: "Dîner", type: "evening" }
+                      ];
+                    } else if (businessType === "culture") {
+                      exampleSlots = [
+                        { startTime: "10:00", endTime: "20:00", label: "Horaires étendus", type: "all_day" }
+                      ];
+                    } else if (businessType === "bien-etre") {
+                      exampleSlots = [
+                        { startTime: "08:00", endTime: "19:00", label: "Journée continue", type: "custom" }
+                      ];
+                    }
+
+                    weekDays.slice(1, 6).forEach(day => {
+                      createOrUpdateSchedule.mutate({
+                        businessId: "demo-business-1",
+                        dayOfWeek: day.id,
+                        isOpen: true,
+                        timeSlots: exampleSlots,
+                        businessType
+                      });
+                    });
+                    toast({ title: "Exemple appliqué", description: "Horaires étendus appliqués aux jours ouvrables" });
+                  }}
+                >
+                  {businessType === "restaurant" && "🍽️ Horaires étendus (12h-15h, 19h-23h)"}
+                  {businessType === "culture" && "🎭 Horaires étendus (10h-20h)"}
+                  {businessType === "bien-etre" && "🧘 Journée continue (8h-19h)"}
+                </Button>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>

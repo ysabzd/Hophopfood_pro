@@ -3,7 +3,7 @@ import { Bell, Leaf } from "lucide-react";
 import BottomNavigation from "./bottom-navigation";
 import AccueilTab from "./accueil-tab";
 import ProduitsTab from "./produits-tab";
-import OffrirTab from "./offrir-tab";
+import DonTab from "./don-tab";
 import HoraireTab from "./horaire-tab";
 import AutresTab from "./autres-tab";
 import { Button } from "@/components/ui/button";
@@ -19,8 +19,8 @@ export default function MobileLayout() {
         return <AccueilTab />;
       case "produits":
         return <ProduitsTab />;
-      case "offrir":
-        return <OffrirTab />;
+      case "don":
+        return <DonTab />;
       case "horaire":
         return <HoraireTab />;
       case "autres":
